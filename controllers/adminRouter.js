@@ -6,6 +6,7 @@ router.post("/addDish",async (req,res)=>{
 
     let data = req.body
     let dishObj = new dishModel(data)
+    console.log(data)
     let result = await dishObj.save()
     res.json(
         {

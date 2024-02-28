@@ -10,6 +10,8 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
+mongoose.connect("mongodb+srv://jobydb:joby123@cluster0.czhpkmp.mongodb.net/hungry-raptor-DB?retryWrites=true&w=majority")
+
 app.use("/api/admin",adminRouter)
 
 app.listen("3001",()=>{
