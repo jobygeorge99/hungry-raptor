@@ -15,4 +15,15 @@ router.post("/addDish",async (req,res)=>{
     )
 })
 
+router.post("/removeDish",async(req,res)=>{
+
+    let data = req.body
+    let result = await dishModel.deleteOne(data)
+    res.json(
+        {
+            "status":"success"
+        }
+    )
+})
+
 module.exports = router
