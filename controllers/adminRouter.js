@@ -27,8 +27,17 @@ router.post("/removeDish",async(req,res)=>{
 })
 
 router.post("/updateDishNum",async(req,res)=>{
-    let data = req.body
-    let result = await dishModel.updateOne()
+
+    let {id,...rest} = req.body
+    let result = await dishModel.updateOne(
+        {_id:id},
+        rest
+    )
+    res.json(
+        {
+            "status":"success"
+        }
+    )
 })
 
 module.exports = router
