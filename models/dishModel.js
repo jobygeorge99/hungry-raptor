@@ -13,6 +13,11 @@ const dishSchema = mongoose.Schema(
         {
             type:Date,
             default:Date.now
+        },
+        count:
+        {
+            type:String,
+            default:"0"
         }
     }
 )
