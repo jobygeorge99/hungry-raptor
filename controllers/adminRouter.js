@@ -40,7 +40,7 @@ router.post("/updateDishNum",async(req,res)=>{
     )
 })
 
-router.get("/viewOrders",async(req,res)=>{
+router.get("/viewMenu",async(req,res)=>{
 
     let data = await dishModel.find()
     res.json(data)
