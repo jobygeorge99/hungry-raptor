@@ -2,6 +2,32 @@ const express = require("express")
 const router = express.Router()
 const orderModel = require("../models/orderModel")
 const dishModel = require("../models/dishModel")
+const userModel = require("../models/userModel")
+const bcrypt = require("bcryptjs")
+
+hashedPasswordGenerator = async(pass) =>{
+    const salt = await bcrypt.genSalt(10)
+    return bcrypt.hash(pass,salt)
+}
+
+router.post("/signUp",async(req,res)=>{
+
+    let {data} = { "data" : req.body }
+    let password = data.password
+
+    const hashedPassword = await hashedPasswordGenerator(password)
+    data.password = hashedPassword
+
+    let userModelObj = new userModel(data)
+    let result = userModelObj.save()
+    res.json(
+        {
+            status:"success"
+        }
+    )
+
+
+})
 
 router.post("/place_order",async(req,res)=>{
     

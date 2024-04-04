@@ -13,6 +13,15 @@ const userSchema = mongoose.Schema(
         registered_on:{
             type:Date,
             default:Date.now
+        },
+        password:{
+            type:String,
+            required:true
+        },
+        role:{
+            type:String,
+            default:"0"
+            // 0 user, 1 admin
         }
     }
 )
