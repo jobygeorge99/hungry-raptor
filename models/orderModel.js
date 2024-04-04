@@ -4,7 +4,6 @@ const orderSchema = mongoose.Schema(
     {
         customerId:{
             type:String,
-
             required:true
         },
         dishName:{
@@ -18,7 +17,12 @@ const orderSchema = mongoose.Schema(
         date:{
             type:Date,
             default:Date.now
+        },
+        orderstatus:{
+            type:String,
+            default:"0"
         }
+        // 
     }
 )
 module.exports = mongoose.model("orders",orderSchema)
