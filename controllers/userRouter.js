@@ -65,4 +65,34 @@ router.post("/view_my_orders",async(req,res)=>{
     }
 })
 
+router.post("/login",async(req,res)=>{
+
+    let input = req.body
+    console.log(input)
+    let email = req.body.email
+    let data = await userModel.findOne({"email_id":email})
+    //console.log(data)
+
+    if(!data){
+        return res.json({"status":"invalid username/password"})
+    }else{
+        //console.log(data)
+        let dBpassword = data.password
+        let inputPassword = req.body.password
+
+        const match = await bcrypt.compare(inputPassword,dBpassword)
+        if(!match){
+            res.json({
+                "status":"invalid username/password"
+            })
+        }else{
+            res.json({
+                "_id":data._id,
+                "name":data.name
+            })
+        }
+    }
+
+})
+
 module.exports = router
