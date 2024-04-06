@@ -88,7 +88,8 @@ router.post("/login",async(req,res)=>{
         }else{
             res.json({
                 "_id":data._id,
-                "name":data.name
+                "name":data.name,
+                "role":data.role
             })
         }
     }
