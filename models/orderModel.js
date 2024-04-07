@@ -18,11 +18,11 @@ const orderSchema = mongoose.Schema(
             type:Date,
             default:Date.now
         },
-        orderstatus:{
+        orderStatus:{
             type:String,
-            default:"0"
+            default:"notServed"
         }
-        // 
+         
     }
 )
 module.exports = mongoose.model("orders",orderSchema)

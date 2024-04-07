@@ -1,6 +1,7 @@
 const express = require("express")
 const dishModel = require("../models/dishModel")
 const router = express.Router()
+const orderModel = require("../models/orderModel")
 
 router.post("/addDish",async (req,res)=>{
 
@@ -45,7 +46,7 @@ router.get("/pendingOrders",async(req,res)=>{
 
     let data = await orderModel.find(
         {
-            "orderStatus":"0"
+            "orderStatus":"notServed"
         }
     )
     res.json(data)
@@ -56,7 +57,7 @@ router.get("/fulfilledOrders",async(req,res)=>{
 
     let data = await orderModel.find(
         {
-            "orderStatus":"1"
+            "orderStatus":"served"
         }
     )
     res.json(data)
