@@ -40,10 +40,27 @@ router.post("/updateDishNum",async(req,res)=>{
     )
 })
 
-router.get("/viewMenu",async(req,res)=>{
 
-    let data = await dishModel.find()
+router.get("/pendingOrders",async(req,res)=>{
+
+    let data = await orderModel.find(
+        {
+            "orderStatus":"0"
+        }
+    )
     res.json(data)
+
+})
+
+router.get("/fulfilledOrders",async(req,res)=>{
+
+    let data = await orderModel.find(
+        {
+            "orderStatus":"1"
+        }
+    )
+    res.json(data)
+
 })
 
 module.exports = router
