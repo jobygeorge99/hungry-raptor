@@ -18,6 +18,10 @@ const dishSchema = mongoose.Schema(
         {
             type:String,
             default:"0"
+        },
+        price:
+        {
+            type:String
         }
     }
 )
