@@ -3,6 +3,7 @@ const router = express.Router()
 const orderModel = require("../models/orderModel")
 const dishModel = require("../models/dishModel")
 const userModel = require("../models/userModel")
+const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs")
 
 hashedPasswordGenerator = async(pass) =>{
@@ -12,19 +13,43 @@ hashedPasswordGenerator = async(pass) =>{
 
 router.post("/signUp",async(req,res)=>{
 
-    let {data} = { "data" : req.body }
-    let password = data.password
-
-    const hashedPassword = await hashedPasswordGenerator(password)
-    data.password = hashedPassword
-
-    let userModelObj = new userModel(data)
-    let result = userModelObj.save()
-    res.json(
-        {
-            status:"success"
+    // check if the user already exists
+    let email = req.body.email_id
+    
+    try{
+        
+        let user = await userModel.findOne({ "email_id":email });
+        if (user) {
+        return res.status(400).json({ msg: 'Email already exists' });
         }
-    )
+
+        let {data} = { "data" : req.body }
+        let password = data.password
+
+        const hashedPassword = await hashedPasswordGenerator(password)
+        data.password = hashedPassword
+
+        let userModelObj = new userModel(data)
+        let result = userModelObj.save()
+        console.log(result)
+        if(result){
+
+            jwt.sign(
+                result,
+                process.env.JWT_SECRET,
+                { expiresIn: '7 days' },
+                (err, token) => {
+                if (err) throw err;
+                res.json({ token });
+                }
+            );
+        }
+    }catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+
+    
 
 
 })
@@ -93,6 +118,16 @@ router.post("/login",async(req,res)=>{
             })
         }
     }
+
+    jwt.sign(
+        result,
+        process.env.JWT_SECRET,
+        { expiresIn: '7 days' },
+        (err, token) => {
+        if (err) throw err;
+        res.json({ token });
+        }
+    );
 
 })
 
