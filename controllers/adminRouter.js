@@ -41,6 +41,11 @@ router.post("/updateDishNum",async(req,res)=>{
     )
 })
 
+router.get("/viewOrders",async(req,res)=>{
+
+    let data = await orderModel.find()
+    res.json(data)
+})
 
 router.get("/pendingOrders",async(req,res)=>{
 
