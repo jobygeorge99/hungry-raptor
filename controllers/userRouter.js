@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require("express")
 const router = express.Router()
 const orderModel = require("../models/orderModel")
@@ -30,12 +31,21 @@ router.post("/signUp",async(req,res)=>{
         data.password = hashedPassword
 
         let userModelObj = new userModel(data)
-        let result = userModelObj.save()
+        let result = await userModelObj.save()
         console.log(result)
+
+        let payload = (
+            {
+                "_id":result._id,
+                "name":result.name,
+                "role":result.role
+            }
+        )
+
         if(result){
 
             jwt.sign(
-                result,
+                payload,
                 process.env.JWT_SECRET,
                 { expiresIn: '7 days' },
                 (err, token) => {
@@ -111,23 +121,24 @@ router.post("/login",async(req,res)=>{
                 "status":"invalid username/password"
             })
         }else{
-            res.json({
+            let payload = ({
                 "_id":data._id,
                 "name":data.name,
                 "role":data.role
             })
+            jwt.sign(
+                payload,
+                process.env.JWT_SECRET,
+                { expiresIn: '7 days' },
+                (err, token) => {
+                if (err) throw err;
+                res.json({ token });
+                }
+            );
         }
     }
 
-    jwt.sign(
-        result,
-        process.env.JWT_SECRET,
-        { expiresIn: '7 days' },
-        (err, token) => {
-        if (err) throw err;
-        res.json({ token });
-        }
-    );
+    
 
 })
 
