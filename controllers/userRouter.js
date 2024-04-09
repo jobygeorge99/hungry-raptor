@@ -4,6 +4,7 @@ const orderModel = require("../models/orderModel")
 const dishModel = require("../models/dishModel")
 const userModel = require("../models/userModel")
 const bcrypt = require("bcryptjs")
+const cartModel = require("../models/cartModel")
 
 hashedPasswordGenerator = async(pass) =>{
     const salt = await bcrypt.genSalt(10)
@@ -94,6 +95,41 @@ router.post("/login",async(req,res)=>{
         }
     }
 
+})
+
+router.post("/addToCart",async(req,res)=>{
+    
+    let data = req.body
+    let dishId = req.body.dishId
+    let idPresent = await cartModel.findOne({"dishId":dishId})
+    if(!idPresent){
+        let cartModelObj = new cartModel(data)
+        console.log(data)
+        let result = await cartModelObj.save()
+        if(result){
+            res.json({
+                "status":"success"
+            })
+        }
+    }else{
+        let {id,...rest} = req.body
+        let updateResult = await cartModel.updateOne(
+            {dishId:id},
+            rest
+        )
+        if(updateResult){
+            res.json({
+                "status":"success"
+            })
+        }
+    }
+    
+})
+
+router.get("/getMyCart",async(req,res)=>{
+
+    let data = await cartModel.find()
+    res.json(data)
 })
 
 module.exports = router
