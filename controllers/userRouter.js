@@ -99,37 +99,51 @@ router.post("/login",async(req,res)=>{
 
 router.post("/addToCart",async(req,res)=>{
     
-    let data = req.body
     let dishId = req.body.dishId
-    let idPresent = await cartModel.findOne({"dishId":dishId})
-    if(!idPresent){
-        let cartModelObj = new cartModel(data)
-        console.log(data)
+    let data = await cartModel.findOne({"dishId":dishId})
+    if(data){
+        data.count = req.body.count
+        let result = await data.save()
+        console.log(result)
+        if(result){
+            res.json({
+                "status":"success"
+            })
+        }else{
+            res.json({
+                "status":"failed"
+            })
+        }
+    }else{
+        let input = req.body
+        let cartModelObj = new cartModel(input)
         let result = await cartModelObj.save()
         if(result){
             res.json({
                 "status":"success"
             })
-        }
-    }else{
-        let {id,...rest} = req.body
-        let updateResult = await cartModel.updateOne(
-            {dishId:id},
-            rest
-        )
-        if(updateResult){
+        }else{
             res.json({
-                "status":"success"
+                "status":"failed"
             })
         }
     }
     
 })
 
-router.get("/getMyCart",async(req,res)=>{
+router.post("/getMyCart",async(req,res)=>{
 
-    let data = await cartModel.find()
-    res.json(data)
+    let id = req.body.id
+    let data = await cartModel.find(id)
+    if(data){
+        res.json(data)
+    }
+    else{
+        res.json({
+            "status":"failed"
+        })
+    }
+    
 })
 
 module.exports = router

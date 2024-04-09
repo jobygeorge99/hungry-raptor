@@ -28,21 +28,22 @@ router.post("/removeDish",async(req,res)=>{
 
 router.post("/updateDishNum", async (req, res) => {
     try {
-        let { id, ...rest } = req.body;
-        let result = await dishModel.updateOne(
-            { _id: id },
-            rest
-        );
-        if (result != null) {
-            res.json({
-                "status": "success"
-            });
-        } else {
-            res.status(500).json({
-                "status": "error",
-                "message": "Failed to update dish number."
-            });
+        let id = req.body._id;
+        let data = await dishModel.findOne({"_id":id})
+        if(data){
+            data.count = req.body.count
+            let result = data.save()
+            if(result){
+                res.json({
+                    "status":"success"
+                })
+            }else{
+                res.json({
+                    "status":"failed"
+                })
+            }
         }
+        
     } catch (error) {
         res.json({
             "status": "failed"
