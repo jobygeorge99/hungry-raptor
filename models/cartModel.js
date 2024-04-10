@@ -7,8 +7,9 @@ const cartSchema = mongoose.Schema(
             required:true
         },
         dishId:{
-            type:String,
-            required:true
+            type:mongoose.Schema.Types.ObjectId,
+            required:true,
+            ref:"dishes" 
         },
         count:
         {

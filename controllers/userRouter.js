@@ -131,19 +131,45 @@ router.post("/addToCart",async(req,res)=>{
     
 })
 
-router.post("/getMyCart",async(req,res)=>{
+// router.post("/getMyCart",async(req,res)=>{
 
-    let id = req.body.id
-    let data = await cartModel.find(id)
-    if(data){
-        res.json(data)
-    }
-    else{
-        res.json({
-            "status":"failed"
-        })
-    }
+//     let id = req.body.id
+//     let data = await cartModel.find(id)
+//     .populate()
+//     .exec()
+  
+//     if(data){
+//         res.json(data)
+//     }
+//     else{
+//         res.json({
+//             "status":"failed"
+//         })
+//     }
     
-})
+// })
+
+router.post("/getMyCart", async (req, res) => {
+    try {
+        let id = req.body.id;
+
+        // Find documents in the carts collection based on the provided id
+        let cartData = await cartModel.find(id);
+        console.log(cartData)
+        // Populate the dishId field in each document with data from the dishes collection
+        let populatedData = await cartModel.populate(cartData, {
+            path: 'dishId',
+            model: 'dishes',
+            select: 'name image price' // Specify the fields you want to select from the dishes collection
+        });
+
+        // Send the populated data as a response
+        res.json(populatedData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ "status": "failed" });
+    }
+});
+
 
 module.exports = router
