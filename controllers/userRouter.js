@@ -151,11 +151,10 @@ router.post("/addToCart",async(req,res)=>{
 
 router.post("/getMyCart", async (req, res) => {
     try {
-        let id = req.body.id;
-
+        let id = req.body.userId
         // Find documents in the carts collection based on the provided id
         let cartData = await cartModel.find(id);
-        console.log(cartData)
+        //console.log(cartData)
         // Populate the dishId field in each document with data from the dishes collection
         let populatedData = await cartModel.populate(cartData, {
             path: 'dishId',
@@ -163,8 +162,17 @@ router.post("/getMyCart", async (req, res) => {
             select: 'name image price' // Specify the fields you want to select from the dishes collection
         });
 
+        const result = []
+        for (const item of populatedData) {
+            console.log(req.data)
+            if (item.userId == id) {
+                result.push(item);
+            }
+        }
+        console.log(result)
+
         // Send the populated data as a response
-        res.json(populatedData);
+        res.json(result);
     } catch (error) {
         console.error(error);
         res.status(500).json({ "status": "failed" });
