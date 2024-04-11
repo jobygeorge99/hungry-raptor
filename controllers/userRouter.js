@@ -18,7 +18,7 @@ router.post("/signUp",async(req,res)=>{
 
     const hashedPassword = await hashedPasswordGenerator(password)
     data.password = hashedPassword
-
+    data.role = "0"
     let userModelObj = new userModel(data)
     let result = userModelObj.save()
     res.json(
@@ -151,10 +151,10 @@ router.post("/addToCart",async(req,res)=>{
 
 router.post("/getMyCart", async (req, res) => {
     try {
-        let id = req.body.userId
+        let id = { "userId":req.body.userId }
         // Find documents in the carts collection based on the provided id
         let cartData = await cartModel.find(id);
-        //console.log(cartData)
+        //console.log(id)
         // Populate the dishId field in each document with data from the dishes collection
         let populatedData = await cartModel.populate(cartData, {
             path: 'dishId',
@@ -164,8 +164,9 @@ router.post("/getMyCart", async (req, res) => {
 
         const result = []
         for (const item of populatedData) {
-            console.log(req.data)
-            if (item.userId == id) {
+            // console.log("item.userId:",item.userId)
+            // console.log("id:",id.userId)
+            if (item.userId == id.userId) {
                 result.push(item);
             }
         }
