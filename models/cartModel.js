@@ -20,6 +20,15 @@ const cartSchema = mongoose.Schema(
         {
             type:Date,
             default:Date.now
+        },
+        orderStatus:
+        {
+            type:String,
+            default:"0"
+        },
+        transactionId:{
+            type:String,
+            default:""
         }
     }
 )

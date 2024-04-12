@@ -33,12 +33,34 @@ router.post("/signUp",async(req,res)=>{
 router.post("/place_order",async(req,res)=>{
     
     let data = req.body
+    let customerId = data.customerId
     let orderModelObj = new orderModel(data)
     console.log(data)
     let result = await orderModelObj.save()
-    res.json({
-        "status":"success"
-    })
+    //console.log(result)
+    let txnId = result.transactionId
+
+    let cartResult = await cartModel.find({ userId: customerId });
+    //console.log(cartResult)
+
+    cartResult.forEach(order => {
+        order.orderStatus = '1';
+        order.transactionId = txnId;  // Add your desired new field and value
+        order.save(); // Save each updated order
+    });
+    
+    
+
+    if(result){
+        res.json({
+            "status":"success"
+        })
+    }else{
+        res.json({
+            "status":"failed"
+        })
+    }
+
 })
 
 router.get("/viewMenu",async(req,res)=>{
@@ -154,9 +176,11 @@ router.post("/getMyCart", async (req, res) => {
         let id = { "userId":req.body.userId }
         // Find documents in the carts collection based on the provided id
         let cartData = await cartModel.find(id);
+        const filteredCartData = cartData.filter(cartItem => cartItem.orderStatus === "0");
+        //console.log(filteredCartData)
         //console.log(id)
         // Populate the dishId field in each document with data from the dishes collection
-        let populatedData = await cartModel.populate(cartData, {
+        let populatedData = await cartModel.populate(filteredCartData, {
             path: 'dishId',
             model: 'dishes',
             select: 'name image price' // Specify the fields you want to select from the dishes collection
