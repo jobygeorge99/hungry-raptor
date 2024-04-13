@@ -11,6 +11,9 @@ const cartSchema = mongoose.Schema(
             required:true,
             ref:"dishes" 
         },
+        dishName:{
+            type:String
+        },
         count:
         {
             type:String,
