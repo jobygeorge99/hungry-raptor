@@ -41,15 +41,14 @@ router.post("/place_order",async(req,res)=>{
     let txnId = result.transactionId
 
     let cartResult = await cartModel.find({ userId: customerId });
-    //console.log(cartResult)
+    console.log(cartResult)
 
     cartResult.forEach(order => {
         order.orderStatus = '1';
         order.transactionId = txnId;  // Add your desired new field and value
         order.save(); // Save each updated order
-    });
-    
-    
+    })
+
 
     if(result){
         res.json({
@@ -122,7 +121,11 @@ router.post("/login",async(req,res)=>{
 router.post("/addToCart",async(req,res)=>{
     
     let dishId = req.body.dishId
-    let data = await cartModel.findOne({"dishId":dishId})
+    let userId = req.body.userId
+    const data = await cartModel.findOne({
+        "dishId": dishId,
+        "userId": userId,
+    })
     if(data){
         data.count = req.body.count
         let result = await data.save()
