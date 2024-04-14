@@ -11,6 +11,9 @@ const cartSchema = mongoose.Schema(
             required:true,
             ref:"dishes" 
         },
+        dishName:{
+            type:String
+        },
         count:
         {
             type:String,
@@ -20,6 +23,15 @@ const cartSchema = mongoose.Schema(
         {
             type:Date,
             default:Date.now
+        },
+        orderStatus:
+        {
+            type:String,
+            default:"0"
+        },
+        transactionId:{
+            type:String,
+            default:""
         }
     }
 )

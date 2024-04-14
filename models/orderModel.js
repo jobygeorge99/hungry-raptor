@@ -2,15 +2,11 @@ const mongoose = require("mongoose")
 
 const orderSchema = mongoose.Schema(
     {
-        customerId:{
+        userId:{
             type:String,
             required:true
         },
-        dishName:{
-            type:String,
-            required:true
-        },
-        count:{
+        transactionId:{
             type:String,
             required:true
         },

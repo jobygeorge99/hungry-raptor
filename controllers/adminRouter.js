@@ -52,7 +52,7 @@ router.post("/updateDishNum", async (req, res) => {
     }
 });
 
-
+// to view all orders
 router.get("/viewOrders",async(req,res)=>{
 
     let data = await orderModel.find()
