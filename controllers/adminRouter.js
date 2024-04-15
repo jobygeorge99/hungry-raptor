@@ -139,4 +139,29 @@ router.get("/fulfilledOrders",async(req,res)=>{
 
 })
 
+router.post("/serveFood", async (req, res) => {
+    try {
+        let txnid = req.body.transactionId;
+        let data = await orderModel.findOne({"transactionId":txnid})
+        if(data){
+            data.orderStatus = "served"
+            let result = data.save()
+            if(result){
+                res.json({
+                    "status":"success"
+                })
+            }else{
+                res.json({
+                    "status":"failed"
+                })
+            }
+        }
+        
+    } catch (error) {
+        res.json({
+            "status": "failed"
+        });
+    }
+});
+
 module.exports = router
