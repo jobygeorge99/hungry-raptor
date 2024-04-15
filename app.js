@@ -16,6 +16,6 @@ mongoose.connect("mongodb+srv://jobydb:joby123@cluster0.czhpkmp.mongodb.net/hung
 app.use("/api/admin",adminRouter)
 app.use("/api/user",userRouter)
 
-app.listen("3001",()=>{
+app.listen("5001",()=>{
     console.log("server running")
 })
