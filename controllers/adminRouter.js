@@ -2,6 +2,8 @@ const express = require("express")
 const dishModel = require("../models/dishModel")
 const router = express.Router()
 const orderModel = require("../models/orderModel")
+const cartModel = require("../models/cartModel")
+const userModel = require("../models/userModel")
 
 router.post("/addDish",async (req,res)=>{
 
@@ -61,23 +63,79 @@ router.get("/viewOrders",async(req,res)=>{
 
 router.get("/pendingOrders",async(req,res)=>{
 
-    let data = await orderModel.find(
+    let orders = await orderModel.find(
         {
             "orderStatus":"notServed"
         }
     )
-    res.json(data)
+    if(orders){
+        let ordersWithDetails = {};
+        for (const order of orders) {
+            console.log("order:",order)
+            // Find carts for the current order's transactionId
+            console.log(order.transactionId)
+            const carts = await cartModel.find({"userId": order.userId, "transactionId": order.transactionId});
+            const userModelResult = await userModel.find({"_id":order.userId})
+            const name = userModelResult[0].name
+            console.log("userModelResult:",userModelResult)
+            // If carts found, populate data from carts
+            console.log("carts",carts)
+            const details = carts.map(cart => ({
+                dishName: cart.dishName,
+                count: cart.count
+            }));
+            // Add details to the corresponding transactionId in ordersWithDetails
+            if (!ordersWithDetails[order.transactionId]) {
+                ordersWithDetails[order.transactionId] = [];
+            }
+            ordersWithDetails[order.transactionId].push({...order._doc, details,name});
+        }
+        // Convert ordersWithDetails object to an array
+        const result = Object.values(ordersWithDetails);
+
+        // Send orders with details as response
+        console.log(result);
+        res.json(result);
+    }
 
 })
 
 router.get("/fulfilledOrders",async(req,res)=>{
 
-    let data = await orderModel.find(
+    let orders = await orderModel.find(
         {
             "orderStatus":"served"
         }
     )
-    res.json(data)
+    if(orders){
+        let ordersWithDetails = {};
+        for (const order of orders) {
+            console.log("order:",order)
+            // Find carts for the current order's transactionId
+            console.log(order.transactionId)
+            const carts = await cartModel.find({"userId": order.userId, "transactionId": order.transactionId});
+            const userModelResult = await userModel.find({"_id":order.userId})
+            const name = userModelResult[0].name
+            console.log("userModelResult:",userModelResult)
+            // If carts found, populate data from carts
+            console.log("carts",carts)
+            const details = carts.map(cart => ({
+                dishName: cart.dishName,
+                count: cart.count
+            }));
+            // Add details to the corresponding transactionId in ordersWithDetails
+            if (!ordersWithDetails[order.transactionId]) {
+                ordersWithDetails[order.transactionId] = [];
+            }
+            ordersWithDetails[order.transactionId].push({...order._doc, details,name});
+        }
+        // Convert ordersWithDetails object to an array
+        const result = Object.values(ordersWithDetails);
+
+        // Send orders with details as response
+        console.log(result);
+        res.json(result);
+    }
 
 })
 
