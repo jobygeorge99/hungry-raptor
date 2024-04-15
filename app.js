@@ -1,6 +1,8 @@
 const cors = require("cors")
 const mongoose = require("mongoose")
 const express = require("express")
+const adminRouter = require("./controllers/adminRouter")
+const userRouter = require("./controllers/userRouter")
 
 //alias
 const app = express()
@@ -9,7 +11,11 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
+mongoose.connect("mongodb+srv://jobydb:joby123@cluster0.czhpkmp.mongodb.net/hungry-raptor-DB?retryWrites=true&w=majority")
 
-app.listen("3001",()=>{
+app.use("/api/admin",adminRouter)
+app.use("/api/user",userRouter)
+
+app.listen("5000",()=>{
     console.log("server running")
 })
