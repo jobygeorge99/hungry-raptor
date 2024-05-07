@@ -142,14 +142,19 @@ router.get("/fulfilledOrders",async(req,res)=>{
 router.post("/serveFood", async (req, res) => {
     try {
         let txnid = req.body.transactionId;
-        let data = await orderModel.findOne({"transactionId":txnid})
+        let data = await orderModel.findOne({"transactionId":txnid, "orderStatus":"notServed"})
         if(data){
             data.orderStatus = "served"
             let result = data.save()
             if(result){
-                res.json({
-                    "status":"success"
-                })
+
+                let orders = await cartModel.find(
+                    {
+                        "transactionId":txnid
+                    }
+                )
+
+                res.json(orders)
             }else{
                 res.json({
                     "status":"failed"

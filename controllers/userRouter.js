@@ -157,6 +157,7 @@ router.post("/addToCart",async(req,res)=>{
     const data = await cartModel.findOne({
         "dishId": dishId,
         "userId": userId,
+        "orderStatus":"0"
     })
     if(data){
         data.count = req.body.count
