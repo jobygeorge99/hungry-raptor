@@ -8,7 +8,7 @@ const userRouter = require("./controllers/userRouter")
 const app = express()
 
 //middleware
-app.use(cors())
+// app.use(cors())
 app.use(express.json())
 
 mongoose.connect("mongodb+srv://jobydb:joby123@cluster0.czhpkmp.mongodb.net/hungry-raptor-DB?retryWrites=true&w=majority")
